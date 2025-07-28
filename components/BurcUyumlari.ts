@@ -1,0 +1,177 @@
+export type BurcUyum = {
+  burc1: string;
+  burc2: string;
+  uyum: string;
+};
+
+// Tüm burç kombinasyonları için aşk uyumu yorumları
+export const burcUyumlari: Record<string, Record<string, string>> = {
+  'Koç': {
+    'Koç': 'İki Koç bir araya geldiğinde, ilişkide bolca enerji ve tutku olur. Ancak, her iki taraf da liderlik etmek isteyebilir ve bu durum zaman zaman çatışmalara yol açabilir. Eğer egoları bir kenara bırakıp birlikte hareket etmeyi öğrenirlerse, bu ilişki oldukça heyecan verici ve dinamik olabilir.',
+    'Boğa': 'Koç ve Boğa burçları arasında güçlü bir çekim olabilir. Koç\'un enerjik ve atılgan yapısı, Boğa\'nın sabırlı ve güven veren karakteriyle dengelenir. Ancak, Koç\'un aceleci tavırları zaman zaman Boğa\'nın huzur arayışıyla çatışabilir.',
+    'İkizler': 'Koç ve İkizler arasında dinamik bir uyum vardır. Koç\'un liderlik özellikleri, İkizler\'in esnekliği ile birleşince ilginç bir denge oluşur. İletişim konusunda başarılı bir ilişki kurabilirler.',
+    'Yengeç': 'Koç\'un cesur yapısı ile Yengeç\'in duygusal derinliği arasında çekici bir kontrast vardır. Koç, Yengeç\'e güven verirken, Yengeç de Koç\'a duygusal destek sağlar.',
+    'Aslan': 'İki ateş elementi bir araya geldiğinde tutkulu bir ilişki oluşur. Her ikisi de liderlik özelliklerine sahip olduğu için güçlü bir çift olabilirler.',
+    'Başak': 'Koç\'un spontaneliği ile Başak\'ın düzenliliği arasında öğretici bir ilişki vardır. Birbirlerinden çok şey öğrenebilirler.',
+    'Terazi': 'Koç\'un kararlılığı ile Terazi\'nin denge arayışı arasında uyumlu bir ilişki kurulabilir. Terazi, Koç\'a diplomatik yaklaşım öğretir.',
+    'Akrep': 'İki güçlü karakter bir araya geldiğinde yoğun bir ilişki oluşur. Hem tutkulu hem de rekabetçi olabilirler.',
+    'Yay': 'İki ateş elementi arasında doğal bir uyum vardır. Macera ve keşif ruhları birleşince heyecan verici bir ilişki oluşur.',
+    'Oğlak': 'Koç\'un enerjisi ile Oğlak\'ın disiplini arasında dengeli bir ilişki kurulabilir. Birbirlerini tamamlayıcı özellikler gösterirler.',
+    'Kova': 'Koç\'un bireyselliği ile Kova\'nın yenilikçiliği arasında ilginç bir uyum vardır. Orijinal fikirler üretebilirler.',
+    'Balık': 'Koç\'un gücü ile Balık\'ın sezgileri arasında mistik bir bağ oluşabilir. Birbirlerini farklı açılardan tamamlarlar.'
+  },
+  'Boğa': {
+    'Koç': 'Boğa\'nın sabırlı yapısı ile Koç\'un enerjisi arasında dengeli bir ilişki vardır. Boğa, Koç\'a istikrar sağlarken, Koç da Boğa\'ya heyecan katar.',
+    'Boğa': 'İki Boğa bir araya geldiğinde, ilişkide huzur ve güven ön planda olur. Her iki taraf da sadakat ve istikrar arar. Ortak hedefler ve değerler üzerine kurulu bir ilişki uzun ömürlü olabilir.',
+    'İkizler': 'Boğa\'nın pratik yaklaşımı ile İkizler\'in esnekliği arasında öğretici bir ilişki vardır. Birbirlerinden farklı perspektifler öğrenebilirler.',
+    'Yengeç': 'İki toprak elementi arasında doğal bir uyum vardır. Duygusal derinlik ve güven arayışları birleşince sağlam bir ilişki oluşur.',
+    'Aslan': 'Boğa\'nın sabırlı yapısı ile Aslan\'ın yaratıcılığı arasında dengeli bir ilişki kurulabilir. Birbirlerini destekleyici özellikler gösterirler.',
+    'Başak': 'İki toprak elementi arasında mükemmel bir uyum vardır. Pratik yaklaşımları ve detaylara verdikleri önem birleşince verimli bir ilişki oluşur.',
+    'Terazi': 'Boğa\'nın kararlılığı ile Terazi\'nin denge arayışı arasında uyumlu bir ilişki vardır. Estetik ve güzellik konularında ortak zevkleri olabilir.',
+    'Akrep': 'Boğa\'nın güvenilirliği ile Akrep\'in derinliği arasında güçlü bir bağ oluşabilir. Sadakat ve bağlılık konularında mükemmel uyum gösterirler.',
+    'Yay': 'Boğa\'nın pratik yaklaşımı ile Yay\'ın macera ruhu arasında öğretici bir ilişki vardır. Birbirlerini farklı açılardan zenginleştirirler.',
+    'Oğlak': 'İki toprak elementi arasında doğal bir uyum vardır. Disiplin ve sorumluluk konularında mükemmel anlaşırlar.',
+    'Kova': 'Boğa\'nın geleneksel yaklaşımı ile Kova\'nın yenilikçiliği arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.',
+    'Balık': 'Boğa\'nın pratik yaklaşımı ile Balık\'ın sezgileri arasında dengeli bir ilişki kurulabilir. Birbirlerini tamamlayıcı özellikler gösterirler.'
+  },
+  'İkizler': {
+    'Koç': 'İkizler\'in esnekliği ile Koç\'un enerjisi arasında dinamik bir uyum vardır. İletişim konusunda başarılı bir ilişki kurabilirler.',
+    'Boğa': 'İkizler\'in değişken yapısı ile Boğa\'nın sabırlı karakteri arasında öğretici bir ilişki vardır. Birbirlerinden farklı yaklaşımlar öğrenebilirler.',
+    'İkizler': 'İki İkizler bir araya geldiğinde, iletişim ve sosyal aktiviteler ön planda olur. Ancak, kararlılık konusunda zorluk yaşayabilirler.',
+    'Yengeç': 'İkizler\'in sosyal yapısı ile Yengeç\'in duygusal derinliği arasında dengeli bir ilişki vardır. Birbirlerini farklı açılardan zenginleştirirler.',
+    'Aslan': 'İkizler\'in esnekliği ile Aslan\'ın yaratıcılığı arasında uyumlu bir ilişki kurulabilir. Sosyal aktivitelerde başarılı olabilirler.',
+    'Başak': 'İki hava elementi arasında doğal bir uyum vardır. İletişim ve analiz konularında mükemmel anlaşırlar.',
+    'Terazi': 'İki hava elementi arasında mükemmel bir uyum vardır. Sosyal aktiviteler ve estetik konularda ortak zevkleri olabilir.',
+    'Akrep': 'İkizler\'in açık yapısı ile Akrep\'in gizemli karakteri arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.',
+    'Yay': 'İki hava elementi arasında doğal bir uyum vardır. Macera ve keşif konularında ortak ilgi alanları olabilir.',
+    'Oğlak': 'İkizler\'in esnekliği ile Oğlak\'ın disiplini arasında öğretici bir ilişki vardır. Birbirlerinden farklı yaklaşımlar öğrenebilirler.',
+    'Kova': 'İki hava elementi arasında mükemmel bir uyum vardır. Yenilikçi fikirler ve sosyal aktiviteler konularında ortak ilgi alanları olabilir.',
+    'Balık': 'İkizler\'in sosyal yapısı ile Balık\'ın sezgileri arasında dengeli bir ilişki kurulabilir. Birbirlerini farklı açılardan tamamlarlar.'
+  },
+  'Yengeç': {
+    'Koç': 'Yengeç\'in duygusal derinliği ile Koç\'un cesur yapısı arasında çekici bir kontrast vardır. Yengeç, Koç\'a duygusal destek sağlarken, Koç da Yengeç\'e güven verir.',
+    'Boğa': 'İki toprak elementi arasında doğal bir uyum vardır. Duygusal derinlik ve güven arayışları birleşince sağlam bir ilişki oluşur.',
+    'İkizler': 'Yengeç\'in duygusal derinliği ile İkizler\'in sosyal yapısı arasında dengeli bir ilişki vardır. Birbirlerini farklı açılardan zenginleştirirler.',
+    'Yengeç': 'İki Yengeç bir araya geldiğinde, duygusal bağlar çok güçlü olur. Her iki taraf da güvenli bir yuva arar ve birbirlerini derinden anlarlar. Ancak, aşırı duygusallık zaman zaman sorunlara yol açabilir.',
+    'Aslan': 'Yengeç\'in duygusal derinliği ile Aslan\'ın yaratıcılığı arasında uyumlu bir ilişki vardır. Aslan, Yengeç\'e güven verirken, Yengeç de Aslan\'a duygusal destek sağlar.',
+    'Başak': 'Yengeç\'in duygusal yapısı ile Başak\'ın pratik yaklaşımı arasında dengeli bir ilişki kurulabilir. Birbirlerini tamamlayıcı özellikler gösterirler.',
+    'Terazi': 'Yengeç\'in duygusal derinliği ile Terazi\'nin denge arayışı arasında uyumlu bir ilişki vardır. Estetik ve güzellik konularında ortak zevkleri olabilir.',
+    'Akrep': 'İki su elementi arasında mükemmel bir uyum vardır. Duygusal derinlik ve sezgisel bağlar birleşince güçlü bir ilişki oluşur.',
+    'Yay': 'Yengeç\'in duygusal yapısı ile Yay\'ın macera ruhu arasında öğretici bir ilişki vardır. Birbirlerini farklı açılardan zenginleştirirler.',
+    'Oğlak': 'Yengeç\'in duygusal derinliği ile Oğlak\'ın disiplini arasında dengeli bir ilişki kurulabilir. Birbirlerini tamamlayıcı özellikler gösterirler.',
+    'Kova': 'Yengeç\'in duygusal yapısı ile Kova\'nın yenilikçiliği arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.',
+    'Balık': 'İki su elementi arasında doğal bir uyum vardır. Sezgisel bağlar ve duygusal derinlik birleşince mistik bir ilişki oluşur.'
+  },
+  'Aslan': {
+    'Koç': 'İki ateş elementi bir araya geldiğinde tutkulu bir ilişki oluşur. Her ikisi de liderlik özelliklerine sahip olduğu için güçlü bir çift olabilirler.',
+    'Boğa': 'Aslan\'ın yaratıcılığı ile Boğa\'nın sabırlı yapısı arasında dengeli bir ilişki kurulabilir. Birbirlerini destekleyici özellikler gösterirler.',
+    'İkizler': 'Aslan\'ın yaratıcılığı ile İkizler\'in esnekliği arasında uyumlu bir ilişki vardır. Sosyal aktivitelerde başarılı olabilirler.',
+    'Yengeç': 'Aslan\'ın yaratıcılığı ile Yengeç\'in duygusal derinliği arasında uyumlu bir ilişki vardır. Aslan, Yengeç\'e güven verirken, Yengeç de Aslan\'a duygusal destek sağlar.',
+    'Aslan': 'İki Aslan bir araya geldiğinde, yaratıcılık ve tutku ön planda olur. Her iki taraf da dikkat çekmek ister ve bu durum zaman zaman rekabete yol açabilir. Ancak, birbirlerini anlayabilirler ve güçlü bir çift olabilirler.',
+    'Başak': 'Aslan\'ın yaratıcılığı ile Başak\'ın düzenliliği arasında öğretici bir ilişki vardır. Birbirlerinden çok şey öğrenebilirler.',
+    'Terazi': 'İki ateş elementi arasında doğal bir uyum vardır. Yaratıcılık ve estetik konularda ortak zevkleri olabilir.',
+    'Akrep': 'Aslan\'ın yaratıcılığı ile Akrep\'in derinliği arasında güçlü bir bağ oluşabilir. Hem tutkulu hem de rekabetçi olabilirler.',
+    'Yay': 'İki ateş elementi arasında mükemmel bir uyum vardır. Macera ve keşif ruhları birleşince heyecan verici bir ilişki oluşur.',
+    'Oğlak': 'Aslan\'ın yaratıcılığı ile Oğlak\'ın disiplini arasında dengeli bir ilişki kurulabilir. Birbirlerini tamamlayıcı özellikler gösterirler.',
+    'Kova': 'Aslan\'ın yaratıcılığı ile Kova\'nın yenilikçiliği arasında ilginç bir uyum vardır. Orijinal fikirler üretebilirler.',
+    'Balık': 'Aslan\'ın gücü ile Balık\'ın sezgileri arasında mistik bir bağ oluşabilir. Birbirlerini farklı açılardan tamamlarlar.'
+  },
+  'Başak': {
+    'Koç': 'Başak\'ın düzenliliği ile Koç\'un spontaneliği arasında öğretici bir ilişki vardır. Birbirlerinden çok şey öğrenebilirler.',
+    'Boğa': 'İki toprak elementi arasında mükemmel bir uyum vardır. Pratik yaklaşımları ve detaylara verdikleri önem birleşince verimli bir ilişki oluşur.',
+    'İkizler': 'İki hava elementi arasında doğal bir uyum vardır. İletişim ve analiz konularında mükemmel anlaşırlar.',
+    'Yengeç': 'Başak\'ın pratik yaklaşımı ile Yengeç\'in duygusal yapısı arasında dengeli bir ilişki kurulabilir. Birbirlerini tamamlayıcı özellikler gösterirler.',
+    'Aslan': 'Başak\'ın düzenliliği ile Aslan\'ın yaratıcılığı arasında öğretici bir ilişki vardır. Birbirlerinden çok şey öğrenebilirler.',
+    'Başak': 'İki Başak bir araya geldiğinde, mükemmeliyetçilik ve düzen ön planda olur. Her iki taraf da detaylara önem verir ve pratik yaklaşımlar sergiler. Ancak, aşırı eleştirel olabilirler.',
+    'Terazi': 'Başak\'ın pratik yaklaşımı ile Terazi\'nin denge arayışı arasında uyumlu bir ilişki vardır. Estetik ve güzellik konularında ortak zevkleri olabilir.',
+    'Akrep': 'Başak\'ın analitik yapısı ile Akrep\'in derinliği arasında güçlü bir bağ oluşabilir. Birbirlerini farklı açılardan anlayabilirler.',
+    'Yay': 'Başak\'ın düzenliliği ile Yay\'ın macera ruhu arasında öğretici bir ilişki vardır. Birbirlerini farklı açılardan zenginleştirirler.',
+    'Oğlak': 'İki toprak elementi arasında doğal bir uyum vardır. Disiplin ve sorumluluk konularında mükemmel anlaşırlar.',
+    'Kova': 'Başak\'ın pratik yaklaşımı ile Kova\'nın yenilikçiliği arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.',
+    'Balık': 'Başak\'ın analitik yapısı ile Balık\'ın sezgileri arasında dengeli bir ilişki kurulabilir. Birbirlerini tamamlayıcı özellikler gösterirler.'
+  },
+  'Terazi': {
+    'Koç': 'Terazi\'nin denge arayışı ile Koç\'un kararlılığı arasında uyumlu bir ilişki kurulabilir. Terazi, Koç\'a diplomatik yaklaşım öğretir.',
+    'Boğa': 'Terazi\'nin denge arayışı ile Boğa\'nın kararlılığı arasında uyumlu bir ilişki vardır. Estetik ve güzellik konularında ortak zevkleri olabilir.',
+    'İkizler': 'İki hava elementi arasında mükemmel bir uyum vardır. Sosyal aktiviteler ve estetik konularda ortak zevkleri olabilir.',
+    'Yengeç': 'Terazi\'nin denge arayışı ile Yengeç\'in duygusal derinliği arasında uyumlu bir ilişki vardır. Estetik ve güzellik konularında ortak zevkleri olabilir.',
+    'Aslan': 'İki ateş elementi arasında doğal bir uyum vardır. Yaratıcılık ve estetik konularda ortak zevkleri olabilir.',
+    'Başak': 'Terazi\'nin denge arayışı ile Başak\'ın pratik yaklaşımı arasında uyumlu bir ilişki vardır. Estetik ve güzellik konularında ortak zevkleri olabilir.',
+    'Terazi': 'İki Terazi bir araya geldiğinde, denge ve uyum ön planda olur. Her iki taraf da estetik ve güzellik konularına önem verir. Ancak, karar verme konusunda zorluk yaşayabilirler.',
+    'Akrep': 'Terazi\'nin denge arayışı ile Akrep\'in derinliği arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.',
+    'Yay': 'Terazi\'nin denge arayışı ile Yay\'ın macera ruhu arasında öğretici bir ilişki vardır. Birbirlerini farklı açılardan zenginleştirirler.',
+    'Oğlak': 'Terazi\'nin denge arayışı ile Oğlak\'ın disiplini arasında uyumlu bir ilişki vardır. Estetik ve güzellik konularında ortak zevkleri olabilir.',
+    'Kova': 'İki hava elementi arasında doğal bir uyum vardır. Yenilikçi fikirler ve estetik konularda ortak ilgi alanları olabilir.',
+    'Balık': 'Terazi\'nin denge arayışı ile Balık\'ın sezgileri arasında dengeli bir ilişki kurulabilir. Birbirlerini tamamlayıcı özellikler gösterirler.'
+  },
+  'Akrep': {
+    'Koç': 'İki güçlü karakter bir araya geldiğinde yoğun bir ilişki oluşur. Hem tutkulu hem de rekabetçi olabilirler.',
+    'Boğa': 'Akrep\'in derinliği ile Boğa\'nın güvenilirliği arasında güçlü bir bağ oluşabilir. Sadakat ve bağlılık konularında mükemmel uyum gösterirler.',
+    'İkizler': 'Akrep\'in gizemli karakteri ile İkizler\'in açık yapısı arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.',
+    'Yengeç': 'İki su elementi arasında mükemmel bir uyum vardır. Duygusal derinlik ve sezgisel bağlar birleşince güçlü bir ilişki oluşur.',
+    'Aslan': 'Akrep\'in derinliği ile Aslan\'ın yaratıcılığı arasında güçlü bir bağ oluşabilir. Hem tutkulu hem de rekabetçi olabilirler.',
+    'Başak': 'Akrep\'in derinliği ile Başak\'ın analitik yapısı arasında güçlü bir bağ oluşabilir. Birbirlerini farklı açılardan anlayabilirler.',
+    'Terazi': 'Akrep\'in derinliği ile Terazi\'nin denge arayışı arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.',
+    'Akrep': 'İki Akrep bir araya geldiğinde, derinlik ve tutku ön planda olur. Her iki taraf da gizemli ve yoğun bir ilişki arar. Ancak, aşırı yoğunluk zaman zaman sorunlara yol açabilir.',
+    'Yay': 'Akrep\'in derinliği ile Yay\'ın macera ruhu arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.',
+    'Oğlak': 'Akrep\'in derinliği ile Oğlak\'ın disiplini arasında güçlü bir bağ oluşabilir. Birbirlerini farklı açılardan anlayabilirler.',
+    'Kova': 'Akrep\'in derinliği ile Kova\'nın yenilikçiliği arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.',
+    'Balık': 'İki su elementi arasında doğal bir uyum vardır. Sezgisel bağlar ve duygusal derinlik birleşince mistik bir ilişki oluşur.'
+  },
+  'Yay': {
+    'Koç': 'İki ateş elementi arasında doğal bir uyum vardır. Macera ve keşif ruhları birleşince heyecan verici bir ilişki oluşur.',
+    'Boğa': 'Yay\'ın macera ruhu ile Boğa\'nın pratik yaklaşımı arasında öğretici bir ilişki vardır. Birbirlerini farklı açılardan zenginleştirirler.',
+    'İkizler': 'İki hava elementi arasında doğal bir uyum vardır. Macera ve keşif konularında ortak ilgi alanları olabilir.',
+    'Yengeç': 'Yay\'ın macera ruhu ile Yengeç\'in duygusal yapısı arasında öğretici bir ilişki vardır. Birbirlerini farklı açılardan zenginleştirirler.',
+    'Aslan': 'İki ateş elementi arasında mükemmel bir uyum vardır. Macera ve keşif ruhları birleşince heyecan verici bir ilişki oluşur.',
+    'Başak': 'Yay\'ın macera ruhu ile Başak\'ın düzenliliği arasında öğretici bir ilişki vardır. Birbirlerini farklı açılardan zenginleştirirler.',
+    'Terazi': 'Yay\'ın macera ruhu ile Terazi\'nin denge arayışı arasında öğretici bir ilişki vardır. Birbirlerini farklı açılardan zenginleştirirler.',
+    'Akrep': 'Yay\'ın macera ruhu ile Akrep\'in derinliği arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.',
+    'Yay': 'İki Yay bir araya geldiğinde, macera ve keşif ön planda olur. Her iki taraf da özgürlük ve seyahat arar. Ancak, kararlılık konusunda zorluk yaşayabilirler.',
+    'Oğlak': 'Yay\'ın macera ruhu ile Oğlak\'ın disiplini arasında öğretici bir ilişki vardır. Birbirlerini farklı açılardan zenginleştirirler.',
+    'Kova': 'İki hava elementi arasında doğal bir uyum vardır. Yenilikçi fikirler ve macera konularında ortak ilgi alanları olabilir.',
+    'Balık': 'Yay\'ın macera ruhu ile Balık\'ın sezgileri arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.'
+  },
+  'Oğlak': {
+    'Koç': 'Oğlak\'ın disiplini ile Koç\'un enerjisi arasında dengeli bir ilişki kurulabilir. Birbirlerini tamamlayıcı özellikler gösterirler.',
+    'Boğa': 'İki toprak elementi arasında doğal bir uyum vardır. Disiplin ve sorumluluk konularında mükemmel anlaşırlar.',
+    'İkizler': 'Oğlak\'ın disiplini ile İkizler\'in esnekliği arasında öğretici bir ilişki vardır. Birbirlerinden farklı yaklaşımlar öğrenebilirler.',
+    'Yengeç': 'Oğlak\'ın disiplini ile Yengeç\'in duygusal derinliği arasında dengeli bir ilişki kurulabilir. Birbirlerini tamamlayıcı özellikler gösterirler.',
+    'Aslan': 'Oğlak\'ın disiplini ile Aslan\'ın yaratıcılığı arasında dengeli bir ilişki kurulabilir. Birbirlerini tamamlayıcı özellikler gösterirler.',
+    'Başak': 'İki toprak elementi arasında doğal bir uyum vardır. Disiplin ve sorumluluk konularında mükemmel anlaşırlar.',
+    'Terazi': 'Oğlak\'ın disiplini ile Terazi\'nin denge arayışı arasında uyumlu bir ilişki vardır. Estetik ve güzellik konularında ortak zevkleri olabilir.',
+    'Akrep': 'Oğlak\'ın disiplini ile Akrep\'in derinliği arasında güçlü bir bağ oluşabilir. Birbirlerini farklı açılardan anlayabilirler.',
+    'Yay': 'Oğlak\'ın disiplini ile Yay\'ın macera ruhu arasında öğretici bir ilişki vardır. Birbirlerini farklı açılardan zenginleştirirler.',
+    'Oğlak': 'İki Oğlak bir araya geldiğinde, disiplin ve sorumluluk ön planda olur. Her iki taraf da hedeflerine odaklanır ve güvenli bir gelecek arar. Ancak, aşırı ciddiyet zaman zaman ilişkiyi soğutabilir.',
+    'Kova': 'Oğlak\'ın geleneksel yaklaşımı ile Kova\'nın yenilikçiliği arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.',
+    'Balık': 'Oğlak\'ın disiplini ile Balık\'ın sezgileri arasında dengeli bir ilişki kurulabilir. Birbirlerini tamamlayıcı özellikler gösterirler.'
+  },
+  'Kova': {
+    'Koç': 'Kova\'nın yenilikçiliği ile Koç\'un bireyselliği arasında ilginç bir uyum vardır. Orijinal fikirler üretebilirler.',
+    'Boğa': 'Kova\'nın yenilikçiliği ile Boğa\'nın geleneksel yaklaşımı arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.',
+    'İkizler': 'İki hava elementi arasında mükemmel bir uyum vardır. Yenilikçi fikirler ve sosyal aktiviteler konularında ortak ilgi alanları olabilir.',
+    'Yengeç': 'Kova\'nın yenilikçiliği ile Yengeç\'in duygusal yapısı arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.',
+    'Aslan': 'Kova\'nın yenilikçiliği ile Aslan\'ın yaratıcılığı arasında ilginç bir uyum vardır. Orijinal fikirler üretebilirler.',
+    'Başak': 'Kova\'nın yenilikçiliği ile Başak\'ın pratik yaklaşımı arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.',
+    'Terazi': 'İki hava elementi arasında doğal bir uyum vardır. Yenilikçi fikirler ve estetik konularda ortak ilgi alanları olabilir.',
+    'Akrep': 'Kova\'nın yenilikçiliği ile Akrep\'in derinliği arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.',
+    'Yay': 'İki hava elementi arasında doğal bir uyum vardır. Yenilikçi fikirler ve macera konularında ortak ilgi alanları olabilir.',
+    'Oğlak': 'Kova\'nın yenilikçiliği ile Oğlak\'ın geleneksel yaklaşımı arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.',
+    'Kova': 'İki Kova bir araya geldiğinde, yenilikçilik ve özgünlük ön planda olur. Her iki taraf da özgürlük ve bağımsızlık arar. Ancak, duygusal bağlar konusunda zorluk yaşayabilirler.',
+    'Balık': 'Kova\'nın yenilikçiliği ile Balık\'ın sezgileri arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.'
+  },
+  'Balık': {
+    'Koç': 'Balık\'ın sezgileri ile Koç\'un gücü arasında mistik bir bağ oluşabilir. Birbirlerini farklı açılardan tamamlarlar.',
+    'Boğa': 'Balık\'ın sezgileri ile Boğa\'nın pratik yaklaşımı arasında dengeli bir ilişki kurulabilir. Birbirlerini tamamlayıcı özellikler gösterirler.',
+    'İkizler': 'Balık\'ın sezgileri ile İkizler\'in sosyal yapısı arasında dengeli bir ilişki kurulabilir. Birbirlerini farklı açılardan tamamlarlar.',
+    'Yengeç': 'İki su elementi arasında doğal bir uyum vardır. Sezgisel bağlar ve duygusal derinlik birleşince mistik bir ilişki oluşur.',
+    'Aslan': 'Balık\'ın sezgileri ile Aslan\'ın gücü arasında mistik bir bağ oluşabilir. Birbirlerini farklı açılardan tamamlarlar.',
+    'Başak': 'Balık\'ın sezgileri ile Başak\'ın analitik yapısı arasında dengeli bir ilişki kurulabilir. Birbirlerini tamamlayıcı özellikler gösterirler.',
+    'Terazi': 'Balık\'ın sezgileri ile Terazi\'nin denge arayışı arasında dengeli bir ilişki kurulabilir. Birbirlerini tamamlayıcı özellikler gösterirler.',
+    'Akrep': 'İki su elementi arasında doğal bir uyum vardır. Sezgisel bağlar ve duygusal derinlik birleşince mistik bir ilişki oluşur.',
+    'Yay': 'Balık\'ın sezgileri ile Yay\'ın macera ruhu arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.',
+    'Oğlak': 'Balık\'ın sezgileri ile Oğlak\'ın disiplini arasında dengeli bir ilişki kurulabilir. Birbirlerini tamamlayıcı özellikler gösterirler.',
+    'Kova': 'Balık\'ın sezgileri ile Kova\'nın yenilikçiliği arasında ilginç bir kontrast vardır. Birbirlerini farklı perspektiflerden görmelerini sağlar.',
+    'Balık': 'İki Balık bir araya geldiğinde, sezgiler ve duygusal derinlik ön planda olur. Her iki taraf da mistik ve ruhsal konulara ilgi duyar. Ancak, gerçeklik algısı konusunda zorluk yaşayabilirler.'
+  }
+}; 
