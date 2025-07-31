@@ -1,20 +1,15 @@
+import { authAPI } from '../apiConfig';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
 import * as Haptics from 'expo-haptics';
-import type { User } from "firebase/auth";
-import { deleteUser, onAuthStateChanged, updatePassword } from "firebase/auth";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import type { User } from 'firebase/auth';
+import { browserLocalPersistence, browserSessionPersistence, createUserWithEmailAndPassword, deleteUser, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signOut, updatePassword } from 'firebase/auth';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useRef, useState } from 'react';
 import type { TextInput as RNTextInput } from 'react-native';
 import { Image, ImageBackground, KeyboardAvoidingView, Linking, Modal, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { authAPI } from '../apiConfig';
 import { TAROT_CARDS } from '../components/TarotCardsData';
-import { auth, db } from "../lib/firebase";
-
-
-
-
-
+import { auth, db } from '../firebaseConfig';
 
 // 1. translations objesi (güncellenmiş anahtarlar dahil)
 const translations: Record<'tr' | 'en', Record<string, string>> = {
@@ -207,7 +202,8 @@ function generateInviteCode(date = new Date()) {
   return `${month}${year}${day}`;
 }
 
-// Yardımcı fonksiyon: temaya göre renk döndür (kullanılmıyor)
+// Yardımcı fonksiyon: temaya göre renk döndür
+const themed = (theme: 'light' | 'dark', light: string, dark: string) => theme === 'dark' ? dark : light;
 
 // Gelişmiş temalı renkler
 const themeColors = (theme: 'light' | 'dark') => ({
@@ -233,12 +229,12 @@ const themeColors = (theme: 'light' | 'dark') => ({
   switchThumb: '#888888',
   bar: theme === 'dark' ? '#0A0A0A' : '#f8f8f8',
   barBorder: theme === 'dark' ? '#1A1A1A' : '#e0e0e0',
-} as const);
+});
 
 // Burç uyumu veri yapısı (RootLayout fonksiyonu DIŞINDA tanımlanmalı)
-// const burclar = [
-//   'Koç', 'Boğa', 'İkizler', 'Yengeç', 'Aslan', 'Başak', 'Terazi', 'Akrep', 'Yay', 'Oğlak', 'Kova', 'Balık'
-// ];
+const burclar = [
+  'Koç', 'Boğa', 'İkizler', 'Yengeç', 'Aslan', 'Başak', 'Terazi', 'Akrep', 'Yay', 'Oğlak', 'Kova', 'Balık'
+];
 const cinsiyetler = ['Kadın', 'Erkek', 'Diğer'];
 
 // Her burç-burç-cinsiyet kombinasyonu için uzun ve detaylı açıklamalar
@@ -459,7 +455,7 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
 
   const [showInviteInfo, setShowInviteInfo] = useState(false);
   const [settingsModal, setSettingsModal] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [currentName, setCurrentName] = useState('');
   const [regGender, setRegGender] = useState('');
   const [regBirthDate, setRegBirthDate] = useState('');
@@ -742,77 +738,26 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
   };
 
   const handleRegister = async () => {
-    // Form validasyonu
-    if (!regEmail || !regEmail.trim()) {
-      setRegisterError('Email adresi gerekli!');
-      return;
-    }
-    
-    if (!regName || !regName.trim()) {
-      setRegisterError('İsim gerekli!');
-      return;
-    }
-    
-    if (!regSurname || !regSurname.trim()) {
-      setRegisterError('Soyisim gerekli!');
-      return;
-    }
-    
-    if (!regPassword || !regPassword2) {
-      setRegisterError('Şifre alanları boş olamaz!');
-      return;
-    }
-    
     if (regPassword !== regPassword2) {
       setRegisterError('Şifreler eşleşmiyor');
       return;
     }
-    
-    // Email format kontrolü
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(regEmail)) {
-      setRegisterError('Geçerli bir email adresi girin!');
-      return;
-    }
-    
     // Şifre kontrolü: en az bir büyük harf ve bir rakam
     if (!/(?=.*[A-Z])/.test(regPassword) || !/(?=.*\d)/.test(regPassword)) {
       setRegisterError('Şifrenizde en az bir tane büyük harf ve en az bir rakam kullanmalısınız');
       return;
     }
-    
-    // Şifre uzunluk kontrolü
-    if (regPassword.length < 6) {
-      setRegisterError('Şifre en az 6 karakter olmalıdır!');
-      return;
-    }
-    
     setRegisterError('');
     setLoading(true);
-    
     try {
-      console.log('Kayıt verileri gönderiliyor:', {
-        email: regEmail,
-        name: regName,
-        surname: regSurname
-      });
-      
-      // Neon API ile kayıt
-      const response = await authAPI.register({ 
-        email: regEmail.trim(), 
-        password: regPassword, 
-        name: regName.trim(), 
-        surname: regSurname.trim() 
-      });
-      
-      console.log('Kayıt başarılı:', response);
+      await authAPI.register({ email: regEmail, password: regPassword, name: regName, surname: regSurname });
       setRegisterSuccess('Kayıt başarılı! Giriş yapabilirsiniz.');
       setTimeout(() => {
         setRegisterSuccess('');
         closeModal();
       }, 1500);
     } catch (err) {
-      console.log('Neon kayıt hatası:', err);
+      console.log('Firebase kayıt hatası:', err);
       const errorMessage = (err as Error).message || (err as Error).toString();
       if (errorMessage.includes('network') || errorMessage.includes('offline')) {
         setRegisterError('İnternet bağlantınızı kontrol edin ve tekrar deneyin.');
@@ -824,38 +769,16 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
   };
 
   const handleLogin = async () => {
-    // Form validasyonu
-    if (!loginEmail || !loginEmail.trim()) {
-      setLoginError('Email adresi gerekli!');
-      return;
-    }
-    
-    if (!loginPassword) {
-      setLoginError('Şifre gerekli!');
-      return;
-    }
-    
     setLoginError('');
     setLoading(true);
-    
     try {
-      console.log('Giriş verileri gönderiliyor:', {
-        email: loginEmail
-      });
+      // Oturum kalıcılığını ayarla
       
-      // Neon API ile giriş
-      const response = await authAPI.login({ 
-        email: loginEmail.trim(), 
-        password: loginPassword 
-      });
-      
-      console.log('Giriş başarılı:', response);
-      setCurrentUser(response.user);
-      setCurrentName(response.user.name);
+      const response = await authAPI.login({ email: loginEmail, password: loginPassword });
       setLoginError('');
       closeModal();
     } catch (err) {
-      console.log('Neon giriş hatası:', err);
+      console.log('Firebase giriş hatası:', err);
       const errorMessage = (err as Error).message || (err as Error).toString();
       if (errorMessage.includes('network') || errorMessage.includes('offline')) {
         setLoginError('İnternet bağlantınızı kontrol edin ve tekrar deneyin.');
@@ -1311,12 +1234,19 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
     setProfileSuccess('');
 
     try {
-      // Demo modunda profil güncelleme
-      const { updateUserProfileDemo } = await import('../lib/neon');
-      
-      await updateUserProfileDemo(currentUser.uid, {
-        first_name: editName || currentName,
-        updated_at: new Date()
+      const userRef = doc(db, 'users', currentUser.uid);
+      await updateDoc(userRef, {
+        name: editName || currentName,
+        surname: editSurname || regSurname,
+        email: editEmail || currentUser.email,
+        gender: editGender || regGender,
+        birthDate: editBirthDate || regBirthDate,
+        birthTime: editBirthTime || regBirthTime,
+        birthPlace: editBirthPlace || regBirthPlace,
+        zodiac: editZodiac || regZodiac,
+        job: editJob || regJob,
+        relationship: editRelationship || regRelationship,
+        updatedAt: new Date(),
       });
 
       setProfileSuccess('Profil başarıyla güncellendi!');
@@ -1326,10 +1256,8 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
         setProfileModal(false);
         setProfileSuccess('');
       }, 2000);
-      
     } catch (error: any) {
-      console.error('Profil güncelleme hatası:', error);
-      setProfileError('Profil güncellenirken bir hata oluştu: ' + error.message);
+      setProfileError('Profil güncellenirken hata: ' + error.message);
     } finally {
       setProfileLoading(false);
     }
@@ -1496,7 +1424,7 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
           </TouchableOpacity>
         </View>
         <ScrollView 
-          style={{ flex: 1, width: '100%', height: '100%', paddingTop: 0, paddingHorizontal: 20, paddingBottom: 100 }}
+          style={{ flex: 1, width: '100%', height: '100%', paddingTop: 50, paddingHorizontal: 20, paddingBottom: 100 }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
@@ -1505,20 +1433,8 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
 
               
               {currentUser && (
-    <View style={{
-      position: 'absolute',
-      top: -40,
-      zIndex: 1,
-      alignSelf: 'center',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}>
-      <Text style={{
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#D4AF37',
-        textAlign: 'center'
-      }}>
+    <View style={[styles.welcomeBox, { backgroundColor: colors.card, width: '90%', marginBottom: 0, marginTop: 0 }]}> 
+      <Text style={[styles.welcomeText, { color: colors.accent }]}>
         {t('welcome')}{currentName ? `, ${currentName}` : ''}!
       </Text>
     </View>
@@ -1538,7 +1454,7 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
 
 
 
-      <View style={{ flex: 1, width: '100%', height: '100%', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 8, paddingBottom: 120 }}>
+      <View style={{ flex: 1, width: '100%', height: '100%', justifyContent: 'space-evenly', alignItems: 'center' }}>
     <TouchableOpacity
       style={[styles.card, { 
         backgroundColor: selectedTheme === 'dark' ? 'rgba(26, 26, 26, 0.8)' : 'rgba(255, 255, 255, 0.8)', 
@@ -1642,87 +1558,54 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
   )}
 
   {currentTab === 'category' && (
-    <View style={{ 
-      flex: 1, 
-      width: '100%', 
-      height: '100%', 
-      justifyContent: 'flex-start', 
-      alignItems: 'center', 
-      padding: 20, 
-      paddingTop: 80, 
-      paddingBottom: 120, 
-      position: 'fixed', 
-      top: 0, 
-      left: 0, 
-      right: 0, 
-      bottom: 0,
-      backgroundColor: selectedTheme === 'dark' ? 'rgba(26, 26, 26, 0.95)' : 'rgba(255, 255, 255, 0.95)'
-    }}>
+    <View style={{ flex: 1, width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', padding: 20, paddingTop: 50, paddingBottom: 100, position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}>
       {/* Başlık */}
       <Text style={{ 
         color: colors.accent, 
-        fontSize: 32, 
+        fontSize: 28, 
         fontWeight: 'bold', 
-        marginBottom: 40,
+        marginBottom: 30,
         textAlign: 'center',
-        fontFamily: 'serif',
-        textShadowColor: colors.accent,
-        textShadowOffset: { width: 2, height: 2 },
-        textShadowRadius: 4
+        fontFamily: 'serif'
       }}>
-        🔮 Tarot Kategorileri
-      </Text>
-
-      {/* Alt Açıklama */}
-      <Text style={{ 
-        color: colors.subtext, 
-        fontSize: 16, 
-        textAlign: 'center', 
-        marginTop: 30,
-        fontStyle: 'italic',
-        fontWeight: '500'
-      }}>
-        ✨ Kategori seçin ve tarot kartlarınızı çekin ✨
+        Tarot Kategorileri
       </Text>
       
       {/* 2x2 Grid Container - Kare Butonlar */}
-      <View style={{
-        position: 'relative',
+      <View style={{ 
         width: '100%', 
-        minHeight: 500,
-        flex: 1,
+        height: '70%', 
         flexDirection: 'row', 
         flexWrap: 'wrap',
         justifyContent: 'space-between',
         alignItems: 'center',
-        gap: 20,
-        paddingHorizontal: 10
+        gap: 15
       }}>
         {/* Sol Üst Kart - Aşk */}
         <TouchableOpacity
           style={{
-            width: '45%',
+            width: '47%',
             aspectRatio: 1,
             backgroundColor: selectedTheme === 'dark' ? 'rgba(26, 26, 26, 0.9)' : 'rgba(255, 255, 255, 0.9)',
             borderColor: colors.accent,
             borderWidth: 3,
-            borderRadius: 25,
+            borderRadius: 20,
             justifyContent: 'center',
             alignItems: 'center',
-            elevation: 15,
+            elevation: 12,
             shadowColor: colors.accent,
-            shadowOffset: { width: 0, height: 8 },
-            shadowOpacity: 0.9,
-            shadowRadius: 15,
+            shadowOffset: { width: 0, height: 6 },
+            shadowOpacity: 0.8,
+            shadowRadius: 12,
           }}
           onPress={() => handleCategorySelect('ask')}
         >
           <Text style={{ 
-            fontSize: 20, 
+            fontSize: 18, 
             fontWeight: 'bold', 
             color: colors.accent, 
             textAlign: 'center', 
-            lineHeight: 28,
+            lineHeight: 24,
             fontFamily: 'serif'
           }}>
             💕{'\n'}Aşk & İlişkiler
@@ -1732,28 +1615,28 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
         {/* Sağ Üst Kart - Sağlık */}
         <TouchableOpacity
           style={{
-            width: '45%',
+            width: '47%',
             aspectRatio: 1,
             backgroundColor: selectedTheme === 'dark' ? 'rgba(26, 26, 26, 0.9)' : 'rgba(255, 255, 255, 0.9)',
             borderColor: colors.accent,
             borderWidth: 3,
-            borderRadius: 25,
+            borderRadius: 20,
             justifyContent: 'center',
             alignItems: 'center',
-            elevation: 15,
+            elevation: 12,
             shadowColor: colors.accent,
-            shadowOffset: { width: 0, height: 8 },
-            shadowOpacity: 0.9,
-            shadowRadius: 15,
+            shadowOffset: { width: 0, height: 6 },
+            shadowOpacity: 0.8,
+            shadowRadius: 12,
           }}
           onPress={() => handleCategorySelect('saglik')}
         >
           <Text style={{ 
-            fontSize: 20, 
+            fontSize: 18, 
             fontWeight: 'bold', 
             color: colors.accent, 
             textAlign: 'center', 
-            lineHeight: 28,
+            lineHeight: 24,
             fontFamily: 'serif'
           }}>
             🌟{'\n'}Sağlık & Enerji
@@ -1763,28 +1646,28 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
         {/* Sol Alt Kart - Kariyer */}
         <TouchableOpacity
           style={{
-            width: '45%',
+            width: '47%',
             aspectRatio: 1,
             backgroundColor: selectedTheme === 'dark' ? 'rgba(26, 26, 26, 0.9)' : 'rgba(255, 255, 255, 0.9)',
             borderColor: colors.accent,
             borderWidth: 3,
-            borderRadius: 25,
+            borderRadius: 20,
             justifyContent: 'center',
             alignItems: 'center',
-            elevation: 15,
+            elevation: 12,
             shadowColor: colors.accent,
-            shadowOffset: { width: 0, height: 8 },
-            shadowOpacity: 0.9,
-            shadowRadius: 15,
+            shadowOffset: { width: 0, height: 6 },
+            shadowOpacity: 0.8,
+            shadowRadius: 12,
           }}
           onPress={() => handleCategorySelect('kariyer')}
         >
           <Text style={{ 
-            fontSize: 20, 
+            fontSize: 18, 
             fontWeight: 'bold', 
             color: colors.accent, 
             textAlign: 'center', 
-            lineHeight: 28,
+            lineHeight: 24,
             fontFamily: 'serif'
           }}>
             💰{'\n'}Kariyer & Para
@@ -1794,28 +1677,28 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
         {/* Sağ Alt Kart - Genel */}
         <TouchableOpacity
           style={{
-            width: '45%',
+            width: '47%',
             aspectRatio: 1,
             backgroundColor: selectedTheme === 'dark' ? 'rgba(26, 26, 26, 0.9)' : 'rgba(255, 255, 255, 0.9)',
             borderColor: colors.accent,
             borderWidth: 3,
-            borderRadius: 25,
+            borderRadius: 20,
             justifyContent: 'center',
             alignItems: 'center',
-            elevation: 15,
+            elevation: 12,
             shadowColor: colors.accent,
-            shadowOffset: { width: 0, height: 8 },
-            shadowOpacity: 0.9,
-            shadowRadius: 15,
+            shadowOffset: { width: 0, height: 6 },
+            shadowOpacity: 0.8,
+            shadowRadius: 12,
           }}
           onPress={() => handleCategorySelect('genel')}
         >
           <Text style={{ 
-            fontSize: 20, 
+            fontSize: 18, 
             fontWeight: 'bold', 
             color: colors.accent, 
             textAlign: 'center', 
-            lineHeight: 28,
+            lineHeight: 24,
             fontFamily: 'serif'
           }}>
             🔮{'\n'}Genel Yorum
@@ -1823,7 +1706,16 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
         </TouchableOpacity>
       </View>
       
-      
+      {/* Alt Açıklama */}
+      <Text style={{ 
+        color: colors.subtext, 
+        fontSize: 14, 
+        textAlign: 'center', 
+        marginTop: 20,
+        fontStyle: 'italic'
+      }}>
+        Kategori seçin ve tarot kartlarınızı çekin
+      </Text>
     </View>
   )}
 
@@ -1957,7 +1849,7 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
                   elevation: 6,
                 }}
                 onPress={() => {
-                  setCurrentUser(null); setCurrentName('');
+                  signOut(auth);
                   localStorage.removeItem('tarot_user_name');
                 }}
               >
@@ -2110,29 +2002,29 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
         >
           <View style={styles.modalOverlay}>
             <View style={[styles.categoryContent, { backgroundColor: colors.modal }]}> 
-              <Text style={[styles.modalTitle, { color: colors.text, marginBottom: 30, fontSize: 28 }]}>{t('categories')}</Text>
+            <Text style={[styles.modalTitle, { color: colors.text }]}>{t('categories')}</Text>
               <View style={styles.categoryGrid}>
                 <Pressable style={[styles.categorySquare, { backgroundColor: colors.accent }]} onPress={() => handleCategorySelect('ask')}>
-                  <Text style={[styles.categoryButtonText, { color: colors.accentText, fontSize: 16 }]}>{t('love')}</Text>
+                <Text style={[styles.categoryButtonText, { color: colors.accentText }]}>{t('love')}</Text>
                 </Pressable>
                 <Pressable style={[styles.categorySquare, { backgroundColor: colors.accent }]} onPress={() => handleCategorySelect('saglik')}>
-                  <Text style={[styles.categoryButtonText, { color: colors.accentText, fontSize: 16 }]}>{t('health')}</Text>
+                <Text style={[styles.categoryButtonText, { color: colors.accentText }]}>{t('health')}</Text>
                 </Pressable>
               </View>
               <View style={styles.categoryGrid}>
                 <Pressable style={[styles.categorySquare, { backgroundColor: colors.accent }]} onPress={() => handleCategorySelect('kariyer')}>
-                  <Text style={[styles.categoryButtonText, { color: colors.accentText, fontSize: 16 }]}>{t('career')}</Text>
+                <Text style={[styles.categoryButtonText, { color: colors.accentText }]}>{t('career')}</Text>
                 </Pressable>
                 <Pressable style={[styles.categorySquare, { backgroundColor: colors.accent }]} onPress={() => handleCategorySelect('genel')}>
-                  <Text style={[styles.categoryButtonText, { color: colors.accentText, fontSize: 16 }]}>{t('general')}</Text>
+                <Text style={[styles.categoryButtonText, { color: colors.accentText }]}>{t('general')}</Text>
                 </Pressable>
               </View>
-              <Pressable style={[styles.closeButton, { marginTop: 30 }]} onPress={() => setCategoryModal(false)}>
-                <Text style={[styles.closeButtonText, { color: colors.accent }]}>{t('close')}</Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
+              <Pressable style={styles.closeButton} onPress={() => setCategoryModal(false)}>
+        <Text style={[styles.closeButtonText, { color: colors.accent }]}>{t('close')}</Text>
+      </Pressable>
+    </View>
+  </View>
+</Modal>
        
 
 
@@ -2548,7 +2440,7 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
               {!currentUser && formType === 'register' && (
                 <>
                   <TextInput
-                    style={[styles.input, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder }]}
+                    style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.inputBorder }]}
                   placeholder={t('name')}
                     placeholderTextColor={colors.placeholder}
                     value={regName}
@@ -2557,7 +2449,7 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
                     blurOnSubmit={false}
                   />
                   <TextInput
-                    style={[styles.input, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder }]}
+                    style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.inputBorder }]}
                   placeholder={t('surname')}
                     placeholderTextColor={colors.placeholder}
                     value={regSurname}
@@ -2566,7 +2458,7 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
                     blurOnSubmit={false}
                   />
                   <TextInput
-                    style={[styles.input, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder }]}
+                    style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.inputBorder }]}
                   placeholder={t('email')}
                     placeholderTextColor={colors.placeholder}
                     value={regEmail}
@@ -2577,7 +2469,7 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
                     blurOnSubmit={false}
                   />
                   <TextInput
-                    style={[styles.input, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder }]}
+                    style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.inputBorder }]}
                   placeholder={t('password')}
                     placeholderTextColor={colors.placeholder}
                     value={regPassword}
@@ -2587,7 +2479,7 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
                     blurOnSubmit={false}
                   />
                   <TextInput
-                    style={[styles.input, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder }]}
+                    style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text, borderColor: colors.inputBorder }]}
                   placeholder={t('password_repeat')}
                     placeholderTextColor={colors.placeholder}
                     value={regPassword2}
@@ -2626,11 +2518,11 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
                   {/* Düzenlenebilir kullanıcı bilgileri */}
                   <View style={{ width: '100%', marginBottom: 16, backgroundColor: colors.card, borderRadius: 12, padding: 16, borderWidth: 1, borderColor: colors.border }}>
                   <Text style={{ color: colors.accent, fontWeight: 'bold', fontSize: 15, marginBottom: 2 }}>{t('name')}:</Text>
-                    <TextInput style={[styles.input, { borderColor: colors.inputBorder }]} value={currentName} onChangeText={setCurrentName} returnKeyType="next" blurOnSubmit={false} />
+                    <TextInput style={[styles.input, { color: colors.text, borderColor: colors.inputBorder }]} value={currentName} onChangeText={setCurrentName} returnKeyType="next" blurOnSubmit={false} />
                   <Text style={{ color: colors.accent, fontWeight: 'bold', fontSize: 15, marginBottom: 2 }}>{t('surname')}:</Text>
-                    <TextInput style={[styles.input, { borderColor: colors.inputBorder }]} value={regSurname} onChangeText={setRegSurname} returnKeyType="next" blurOnSubmit={false} />
+                    <TextInput style={[styles.input, { color: colors.text, borderColor: colors.inputBorder }]} value={regSurname} onChangeText={setRegSurname} returnKeyType="next" blurOnSubmit={false} />
                   <Text style={{ color: colors.accent, fontWeight: 'bold', fontSize: 15, marginBottom: 2 }}>{t('email')}:</Text>
-                    <TextInput style={[styles.input, { borderColor: colors.inputBorder }]} value={regEmail} onChangeText={setRegEmail} autoCapitalize="none" keyboardType="email-address" returnKeyType="done" blurOnSubmit={true} />
+                    <TextInput style={[styles.input, { color: colors.text, borderColor: colors.inputBorder }]} value={regEmail} onChangeText={setRegEmail} autoCapitalize="none" keyboardType="email-address" returnKeyType="done" blurOnSubmit={true} />
                   <Text style={{ color: colors.accent, fontWeight: 'bold', fontSize: 15, marginBottom: 2 }}>{t('gender')}:</Text>
                     <View style={{ flexDirection: 'row', marginBottom: 8 }}>
                       {cinsiyetler.map((c: string) => (
@@ -2665,13 +2557,13 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
                   <Text style={{ color: colors.accent, fontWeight: 'bold', fontSize: 15, marginBottom: 2 }}>{t('birth_date')}:</Text>
                     <View style={{ flexDirection: 'row', gap: 8 }}>
                       <TouchableOpacity style={[styles.input, { flex: 1, backgroundColor: colors.inputBg, borderColor: colors.inputBorder, justifyContent: 'center' }]} onPress={() => setBirthDayModal(true)}>
-                        <Text>{regBirthDay || "Gün"}</Text>
+                        <Text style={{ color: regBirthDay ? colors.text : colors.placeholder }}>{regBirthDay || "Gün"}</Text>
                       </TouchableOpacity>
                       <TouchableOpacity style={[styles.input, { flex: 1, backgroundColor: colors.inputBg, borderColor: colors.inputBorder, justifyContent: 'center' }]} onPress={() => setBirthMonthModal(true)}>
-                        <Text>{regBirthMonth || "Ay"}</Text>
+                        <Text style={{ color: regBirthMonth ? colors.text : colors.placeholder }}>{regBirthMonth || "Ay"}</Text>
                       </TouchableOpacity>
                       <TouchableOpacity style={[styles.input, { flex: 1, backgroundColor: colors.inputBg, borderColor: colors.inputBorder, justifyContent: 'center' }]} onPress={() => setBirthYearModal(true)}>
-                        <Text>{regBirthYear || "Yıl"}</Text>
+                        <Text style={{ color: regBirthYear ? colors.text : colors.placeholder }}>{regBirthYear || "Yıl"}</Text>
                       </TouchableOpacity>
                     </View>
                   <Text style={{ color: colors.accent, fontWeight: 'bold', fontSize: 15, marginBottom: 2 }}>{t('birth_time')}:</Text>
@@ -2784,7 +2676,7 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
                   </View>
                   <TouchableOpacity
                     style={[styles.modalButton, { backgroundColor: colors.danger, borderColor: colors.dangerBorder, borderWidth: 2, marginBottom: 8 }]}
-                    onPress={() => { setCurrentUser(null); setCurrentName(''); closeModal(); }}
+                    onPress={() => { signOut(auth); localStorage.removeItem('tarot_user_name'); closeModal(); }}
                   >
                   <Text style={[styles.modalButtonText, { color: colors.accentText }]}>{t('logout')}</Text>
                   </TouchableOpacity>
@@ -3232,7 +3124,7 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
                 {/* 78 kart tam ekran */}
                 <View style={{ 
                   width: '100%', 
-                  flex: 1,
+                  height: 300, 
                   justifyContent: 'center',
                   alignItems: 'center',
                   position: 'relative'
@@ -3250,7 +3142,7 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
                     
                     // 78 kartı ekrana tam yerleştirme
                     const screenWidth = 390; // Ekran genişliği
-                    const screenHeight = 600; // Ekran yüksekliği (tam sayfa için)
+                    const screenHeight = 280; // Ekran yüksekliği (kapat butonu için yer bırakıyoruz)
                     const cardWidth = Math.floor((screenWidth - 26) / 13); // 13 sütun için
                     const cardHeight = Math.floor((screenHeight - 12) / 6); // 6 satır için
                     const cardSpacing = 2;
@@ -3327,19 +3219,8 @@ const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(true);
                   })}
                 </View>
 
-                <Pressable 
-                  style={[styles.closeButton, { 
-                    position: 'absolute', 
-                    bottom: 20, 
-                    right: 20,
-                    backgroundColor: colors.accent,
-                    paddingHorizontal: 20,
-                    paddingVertical: 10,
-                    borderRadius: 8
-                  }]} 
-                  onPress={() => setTarotSelectModal(false)}
-                >
-                  <Text style={[styles.closeButtonText, { color: '#fff', fontWeight: 'bold' }]}>{t('close')}</Text>
+                <Pressable style={styles.closeButton} onPress={() => setTarotSelectModal(false)}>
+                  <Text style={styles.closeButtonText}>{t('close')}</Text>
                 </Pressable>
               </>
             ) : (
@@ -3442,19 +3323,8 @@ Bu kartların enerjisi seninle birlikte. Onların rehberliğinde doğru yolu bul
                     })()}
                     </Text>
                 </View>
-                <Pressable 
-                  style={[styles.closeButton, { 
-                    position: 'absolute', 
-                    bottom: 20, 
-                    right: 20,
-                    backgroundColor: colors.accent,
-                    paddingHorizontal: 20,
-                    paddingVertical: 10,
-                    borderRadius: 8
-                  }]} 
-                  onPress={() => setTarotSelectModal(false)}
-                >
-                  <Text style={[styles.closeButtonText, { color: '#fff', fontWeight: 'bold' }]}>{t('close')}</Text>
+                <Pressable style={styles.closeButton} onPress={() => setTarotSelectModal(false)}>
+                  <Text style={styles.closeButtonText}>{t('close')}</Text>
                 </Pressable>
               </ScrollView>
             )}
@@ -3473,7 +3343,7 @@ Bu kartların enerjisi seninle birlikte. Onların rehberliğinde doğru yolu bul
               Ayarlar
             </Text>
             
-            <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 100 }}>
+            <ScrollView style={{ flex: 1 }}>
               {/* Tema Seçimi */}
               <Text style={{ color: colors.accent, fontWeight: 'bold', fontSize: 18, marginBottom: 15 }}>
                 Tema
@@ -3649,7 +3519,7 @@ Bu kartların enerjisi seninle birlikte. Onların rehberliğinde doğru yolu bul
                 <TouchableOpacity
                   onPress={async () => {
                     try {
-                      setCurrentUser(null); setCurrentName('');
+                      await signOut(auth);
                       setSettingsModal(false);
                     } catch (error) {
                       console.error('Çıkış yapılırken hata:', error);
@@ -3724,8 +3594,6 @@ Bu kartların enerjisi seninle birlikte. Onların rehberliğinde doğru yolu bul
           </View>
         )}
         
-        
-        </ScrollView>
         {/* Bottom Tab Bar - Sabit */}
         <View style={[styles.bottomTabBar, { 
           backgroundColor: selectedTheme === 'dark' ? '#1a1a1a' : 'rgba(255,255,255,0.9)',
@@ -3777,6 +3645,7 @@ Bu kartların enerjisi seninle birlikte. Onların rehberliğinde doğru yolu bul
             </Text>
           </TouchableOpacity>
         </View>
+        </ScrollView>
         </ImageBackground>
       </KeyboardAvoidingView>
   );
@@ -3802,7 +3671,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 8,
-    zIndex: 9999,
+    zIndex: 1000,
   },
   tabBar: {
     flexDirection: 'row',
@@ -3930,7 +3799,7 @@ const styles = StyleSheet.create({
   },
   categoryContent: {
     width: '100%',
-    height: '100%',
+    minHeight: '100%',
     backgroundColor: '#fff',
     borderRadius: 16,
     padding: 24,
@@ -3939,23 +3808,22 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 12,
     elevation: 8,
-    justifyContent: 'flex-start',
-    paddingTop: 50,
+    justifyContent: 'center',
   },
   categoryGrid: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 15,
+    marginBottom: 12,
   },
   categorySquare: {
     backgroundColor: '#D4AF37', // gold
     borderRadius: 12,
     width: 110,
     height: 110,
-    marginHorizontal: 10,
+    marginHorizontal: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 6,
+    marginVertical: 4,
   },
   categoryButtonText: {
     color: '#8C7853', // bronze
@@ -3998,8 +3866,8 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 14,
     width: '98%',
-    height: 75,
-    marginVertical: 2,
+    height: 80,
+    marginVertical: 12,
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 1,
@@ -4103,26 +3971,19 @@ const styles = StyleSheet.create({
     color: '#8C7853', // bronze
   },
   welcomeBox: {
-    backgroundColor: '#D4AF37', // gold
+    backgroundColor: '#fff8e1', // very light gold
     borderRadius: 12,
-    padding: 10,
-    marginBottom: 6,
+    padding: 14,
+    marginBottom: 16,
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'center',
-    width: '90%',
-    minHeight: 45,
-    shadowColor: '#8C7853',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    justifyContent: 'space-between',
   },
   welcomeText: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: 'bold',
-    color: '#222', // dark text on gold background
-    textAlign: 'center',
+    color: '#D4AF37', // gold
+    marginRight: 12,
   },
   logoutBtn: {
     backgroundColor: '#D4AF37', // gold

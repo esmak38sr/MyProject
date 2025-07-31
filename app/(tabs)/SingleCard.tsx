@@ -31,7 +31,7 @@ export default function SingleCardScreen() {
       } else {
         setSelectedCard(null);
       }
-    } catch (err) {
+    } catch {
       setLoading(false);
       setSelectedCard(null);
     }

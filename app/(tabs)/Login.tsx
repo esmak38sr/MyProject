@@ -7,18 +7,18 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     try {
-      const res = await fetch('http://localhost:8081/login', {
+      const res = await fetch('http://localhost:3001/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
       if (res.ok) {
-        Alert.alert('Giriş Yap', data.message);
+        Alert.alert('Başarılı', 'Giriş başarılı!');
       } else {
-        Alert.alert('Hata', data.message);
+        Alert.alert('Hata', data.error || 'Giriş başarısız!');
       }
-    } catch (err) {
+    } catch {
       Alert.alert('Hata', 'Giriş sırasında bir hata oluştu.');
     }
   };

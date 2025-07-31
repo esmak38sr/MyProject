@@ -6,17 +6,17 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { Audio } from 'expo-av';
 import React, { useEffect, useState } from 'react';
 import {
-  Alert,
-  Dimensions,
-  ImageBackground,
-  Modal,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
+    Alert,
+    Dimensions,
+    ImageBackground,
+    Modal,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -60,7 +60,7 @@ export default function HomeScreen() {
         sound.unloadAsync();
       }
     };
-  }, []);
+  }, [sound]);
 
   const loadSound = async () => {
     try {
@@ -188,108 +188,78 @@ export default function HomeScreen() {
                 <Text style={[styles.logoIcon, { color: colors.primary }]}>🌙</Text>
               </View>
               <Text style={[styles.headerTitle, { color: colors.primary }]}>
-                Kategoriler
+                Tarot & Astroloji
               </Text>
               <Text style={[styles.headerSubtitle, { color: colors.secondary }]}>
-                Mistik deneyimleriniz için özel kategoriler
+                Mistik deneyimleriniz için özel rehberlik
               </Text>
               <View style={styles.divider} />
             </View>
 
             <View style={styles.cardsContainer}>
-               {/* İlk Satır */}
-               <View style={styles.topRow}>
-                 {/* Tarot Kartı */}
               <TouchableOpacity
-                   style={[styles.card, styles.cardSquare, styles.neumorphicCard, { backgroundColor: colors.card }]}
+                style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}
                 onPress={() => setTarotModal(true)}
                 activeOpacity={0.8}
               >
-                   <View style={[styles.cardAccent, { backgroundColor: '#D4AF37' }]} />
                 <View style={styles.cardContent}>
-                     <View style={styles.neumorphicIconContainer}>
                   <Text style={styles.cardEmoji}>🃏</Text>
-                     </View>
-                     <View style={styles.cardTextContainer}>
                   <Text style={[styles.cardText, { color: colors.primary }]}>
                     Tarot Kartı
                   </Text>
                   <Text style={[styles.cardSubtext, { color: colors.secondary }]}>
                     Günün kartını çek
                   </Text>
-                     </View>
                 </View>
               </TouchableOpacity>
 
-                 {/* Burç Yorumu */}
               <TouchableOpacity
-                   style={[styles.card, styles.cardSquare, styles.neumorphicCard, { backgroundColor: colors.card }]}
+                style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}
                 onPress={() => setBurcModal(true)}
                 activeOpacity={0.8}
               >
-                   <View style={[styles.cardAccent, { backgroundColor: '#8C7853' }]} />
                 <View style={styles.cardContent}>
-                     <View style={styles.neumorphicIconContainer}>
                   <Text style={styles.cardEmoji}>⭐</Text>
-                     </View>
-                     <View style={styles.cardTextContainer}>
                   <Text style={[styles.cardText, { color: colors.primary }]}>
                     Burç Yorumu
                   </Text>
                   <Text style={[styles.cardSubtext, { color: colors.secondary }]}>
                     Günlük burç yorumu
                   </Text>
-                     </View>
                 </View>
               </TouchableOpacity>
-               </View>
 
-               {/* İkinci Satır */}
-               <View style={styles.bottomRow}>
-                 {/* Burç Uyumu */}
               <TouchableOpacity
-                   style={[styles.card, styles.cardSquare, styles.neumorphicCard, { backgroundColor: colors.card }]}
+                style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}
                 onPress={() => setUyumModal(true)}
                 activeOpacity={0.8}
               >
-                   <View style={[styles.cardAccent, { backgroundColor: '#D4AF37' }]} />
                 <View style={styles.cardContent}>
-                     <View style={styles.neumorphicIconContainer}>
                   <Text style={styles.cardEmoji}>💕</Text>
-                     </View>
-                     <View style={styles.cardTextContainer}>
                   <Text style={[styles.cardText, { color: colors.primary }]}>
                     Burç Uyumu
                   </Text>
                   <Text style={[styles.cardSubtext, { color: colors.secondary }]}>
                     Uyumluluk analizi
                   </Text>
-                     </View>
                 </View>
               </TouchableOpacity>
 
-                 {/* Yükselen Burç */}
               <TouchableOpacity
-                   style={[styles.card, styles.cardSquare, styles.neumorphicCard, { backgroundColor: colors.card }]}
+                style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}
                 onPress={() => setRisingModal(true)}
                 activeOpacity={0.8}
               >
-                   <View style={[styles.cardAccent, { backgroundColor: '#8C7853' }]} />
                 <View style={styles.cardContent}>
-                     <View style={styles.neumorphicIconContainer}>
                   <Text style={styles.cardEmoji}>🌅</Text>
-                     </View>
-                     <View style={styles.cardTextContainer}>
                   <Text style={[styles.cardText, { color: colors.primary }]}>
                     Yükselen Burç
                   </Text>
                   <Text style={[styles.cardSubtext, { color: colors.secondary }]}>
                     Doğum saati hesapla
                   </Text>
-                     </View>
                 </View>
               </TouchableOpacity>
-               </View>
             </View>
           </View>
         </ScrollView>
@@ -647,100 +617,39 @@ const styles = StyleSheet.create({
   },
   cardsContainer: {
     flex: 1,
-     justifyContent: 'center',
+    justifyContent: 'space-around',
+    gap: 12,
     paddingVertical: 20,
-     gap: 20,
-   },
-   topRow: {
-     flexDirection: 'row',
-     justifyContent: 'space-between',
-     gap: 15,
-   },
-   bottomRow: {
-     flexDirection: 'row',
-     justifyContent: 'space-between',
-     gap: 15,
-   },
-   cardSquare: {
-     flex: 1,
-     aspectRatio: 1,
-     flexDirection: 'column',
-     alignItems: 'center',
-     justifyContent: 'center',
-     padding: 20,
-   },
-  neumorphicCard: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 12,
-      height: 12,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 20,
-    elevation: 15,
-  },
-     neumorphicIconContainer: {
-     width: 70,
-     height: 70,
-     borderRadius: 35,
-     backgroundColor: 'rgba(255, 255, 255, 0.9)',
-     justifyContent: 'center',
-     alignItems: 'center',
-     shadowColor: '#000',
-     shadowOffset: {
-       width: 6,
-       height: 6,
-     },
-     shadowOpacity: 0.2,
-     shadowRadius: 12,
-     elevation: 8,
   },
   card: {
-    borderRadius: 24,
+    borderRadius: 20,
     padding: 20,
-    borderWidth: 0,
-    width: '100%',
+    borderWidth: 2,
+    borderColor: 'rgba(212, 175, 55, 0.3)',
+    flex: 1,
+    marginVertical: 6,
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 8,
-      height: 8,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 16,
-    elevation: 12,
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  cardAccent: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 4,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    minHeight: 120,
   },
   cardContent: {
-     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
-     gap: 12,
   },
   cardEmoji: {
-    fontSize: 36,
+    fontSize: 40,
+    marginBottom: 8,
   },
   cardText: {
-     fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
+    marginTop: 8,
     marginBottom: 4,
   },
   cardSubtext: {
-     fontSize: 12,
+    fontSize: 14,
     textAlign: 'center',
-     opacity: 0.8,
   },
   modalOverlay: {
     flex: 1,
@@ -830,7 +739,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-     cardTextContainer: {
-     alignItems: 'center',
-  },
-}); 
+});
+

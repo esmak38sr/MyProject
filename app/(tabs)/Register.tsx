@@ -8,14 +8,18 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     try {
-      const res = await fetch('http://localhost:8081/register', {
+      const res = await fetch('http://localhost:3001/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
       });
       const data = await res.json();
-      Alert.alert('Üye Ol', data.message);
-    } catch (err) {
+      if (res.ok) {
+        Alert.alert('Başarılı', 'Kayıt başarılı! Giriş yapabilirsiniz.');
+      } else {
+        Alert.alert('Hata', data.error || 'Kayıt başarısız!');
+      }
+    } catch {
       Alert.alert('Hata', 'Kayıt sırasında bir hata oluştu.');
     }
   };

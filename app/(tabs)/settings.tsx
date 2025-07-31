@@ -1,25 +1,23 @@
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
-    Alert,
-    Linking,
-    ScrollView,
-    StyleSheet,
-    Switch,
-    Text,
-    TouchableOpacity,
-    View,
+  StyleSheet,
+  Text,
+  View,
+  Switch,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  Linking,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { Colors } from '@/constants/Colors';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { Ionicons, FontAwesome } from '@expo/vector-icons';
 
 export default function SettingsScreen() {
-  const colorSchemeRaw = useColorScheme();
-  const colorScheme = colorSchemeRaw.colorScheme === 'dark' ? 'dark' : 'light';
-  const colors = Colors[colorScheme] || Colors['light'];
+  const colorScheme = useColorScheme();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [hapticEnabled, setHapticEnabled] = useState(true);
@@ -94,14 +92,6 @@ export default function SettingsScreen() {
     showSwitch = false, 
     switchValue = false, 
     onSwitchChange = () => {} 
-  }: {
-    title: string;
-    subtitle?: string;
-    icon: string;
-    onPress: () => void;
-    showSwitch?: boolean;
-    switchValue?: boolean;
-    onSwitchChange?: (value: boolean) => void;
   }) => (
     <TouchableOpacity 
       style={styles.settingItem} 
@@ -112,14 +102,14 @@ export default function SettingsScreen() {
         <IconSymbol 
           name={icon} 
           size={24} 
-          color={colors.text} 
+          color={Colors[colorScheme ?? 'light'].text} 
         />
         <View style={styles.settingText}>
-          <Text style={[styles.settingTitle, { color: colors.text }]}>
+          <Text style={[styles.settingTitle, { color: Colors[colorScheme ?? 'light'].text }]}>
             {title}
           </Text>
           {subtitle && (
-            <Text style={[styles.settingSubtitle, { color: colors.tabIconDefault }]}>
+            <Text style={[styles.settingSubtitle, { color: Colors[colorScheme ?? 'light'].tabIconDefault }]}>
               {subtitle}
             </Text>
           )}
@@ -136,35 +126,35 @@ export default function SettingsScreen() {
         <IconSymbol 
           name="chevron.right" 
           size={20} 
-          color={colors.tabIconDefault} 
+          color={Colors[colorScheme ?? 'light'].tabIconDefault} 
         />
       )}
     </TouchableOpacity>
   );
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
+    <ScrollView style={[styles.container, { backgroundColor: Colors[colorScheme ?? 'light'].background }]}>
       <View style={styles.header}>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>
+        <Text style={[styles.headerTitle, { color: Colors[colorScheme ?? 'light'].text }]}>
           Ayarlar
         </Text>
-        <Text style={[styles.headerSubtitle, { color: colors.tabIconDefault }]}>
+        <Text style={[styles.headerSubtitle, { color: Colors[colorScheme ?? 'light'].tabIconDefault }]}>
           Uygulama tercihlerinizi yönetin
         </Text>
       </View>
 
       {/* Profil Kutusu */}
       <View style={styles.section}>
-        <View style={[styles.profileCard, { backgroundColor: colors.background }]}>
+        <View style={[styles.profileCard, { backgroundColor: Colors[colorScheme ?? 'light'].background }]}>
           <View style={styles.profileHeader}>
             <View style={styles.profileAvatar}>
               <Text style={styles.profileInitials}>ES</Text>
             </View>
             <View style={styles.profileInfo}>
-              <Text style={[styles.profileName, { color: colors.text }]}>
+              <Text style={[styles.profileName, { color: Colors[colorScheme ?? 'light'].text }]}>
                 Esma
               </Text>
-              <Text style={[styles.profileEmail, { color: colors.tabIconDefault }]}>
+              <Text style={[styles.profileEmail, { color: Colors[colorScheme ?? 'light'].tabIconDefault }]}>
                 esma@example.com
               </Text>
             </View>
@@ -176,7 +166,7 @@ export default function SettingsScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>
+        <Text style={[styles.sectionTitle, { color: Colors[colorScheme ?? 'light'].text }]}>
           Genel
         </Text>
         
@@ -198,7 +188,7 @@ export default function SettingsScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>
+        <Text style={[styles.sectionTitle, { color: Colors[colorScheme ?? 'light'].text }]}>
           Bildirimler & Ses
         </Text>
         
@@ -231,58 +221,64 @@ export default function SettingsScreen() {
       </View>
 
       {/* Değerlendirme Bölümü */}
-      <View style={[styles.ratingCard, { backgroundColor: colors.background }]}>
-        <Text style={[styles.ratingTitle, { color: colors.text }]}>
-          Uygulamayı Değerlendir
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: Colors[colorScheme ?? 'light'].text }]}>
+          Uygulama
         </Text>
-        <View style={styles.starsContainer}>
-          {[1,2,3,4,5].map((star) => (
-            <TouchableOpacity 
-              key={star} 
-              onPress={() => {
-                setRating(star);
-                setRatingSuccess('Teşekkürler!');
-                setTimeout(() => setRatingSuccess(''), 2000);
-              }}
-            >
-              <Ionicons
-                name={rating >= star ? 'star' : 'star-outline'}
-                size={32}
-                color={rating >= star ? '#D4AF37' : '#8C7853'}
-                style={{ marginHorizontal: 2 }}
-              />
-            </TouchableOpacity>
-          ))}
+        
+        <View style={[styles.ratingCard, { backgroundColor: Colors[colorScheme ?? 'light'].background }]}>
+          <Text style={[styles.ratingTitle, { color: Colors[colorScheme ?? 'light'].text }]}>
+            Uygulamayı Değerlendir
+          </Text>
+          <View style={styles.starsContainer}>
+            {[1,2,3,4,5].map((star) => (
+              <TouchableOpacity 
+                key={star} 
+                onPress={() => {
+                  setRating(star);
+                  setRatingSuccess('Teşekkürler!');
+                  setTimeout(() => setRatingSuccess(''), 2000);
+                }}
+              >
+                <Ionicons
+                  name={rating >= star ? 'star' : 'star-outline'}
+                  size={32}
+                  color={rating >= star ? '#D4AF37' : '#8C7853'}
+                  style={{ marginHorizontal: 2 }}
+                />
+              </TouchableOpacity>
+            ))}
+          </View>
+          {ratingSuccess ? (
+            <Text style={styles.ratingSuccess}>{ratingSuccess}</Text>
+          ) : null}
         </View>
-        {ratingSuccess ? (
-          <Text style={styles.ratingSuccess}>{ratingSuccess}</Text>
-        ) : null}
+        
+        <SettingItem
+          title="Hakkında"
+          subtitle="Uygulama bilgileri"
+          icon="info.circle.fill"
+          onPress={handleAbout}
+        />
+        
+        <SettingItem
+          title="Gizlilik Politikası"
+          subtitle="Veri kullanımı"
+          icon="lock.shield.fill"
+          onPress={() => Alert.alert('Gizlilik', 'Gizlilik politikası yakında eklenecek!')}
+        />
+        
+        <SettingItem
+          title="Kullanım Şartları"
+          subtitle="Yasal bilgiler"
+          icon="doc.text.fill"
+          onPress={() => Alert.alert('Şartlar', 'Kullanım şartları yakında eklenecek!')}
+        />
       </View>
-      
-      <SettingItem
-        title="Hakkında"
-        subtitle="Uygulama bilgileri"
-        icon="info.circle.fill"
-        onPress={handleAbout}
-      />
-      
-      <SettingItem
-        title="Gizlilik Politikası"
-        subtitle="Veri kullanımı"
-        icon="lock.shield.fill"
-        onPress={() => Alert.alert('Gizlilik', 'Gizlilik politikası yakında eklenecek!')}
-      />
-      
-      <SettingItem
-        title="Kullanım Şartları"
-        subtitle="Yasal bilgiler"
-        icon="doc.text.fill"
-        onPress={() => Alert.alert('Şartlar', 'Kullanım şartları yakında eklenecek!')}
-      />
 
       {/* Sosyal Medya */}
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>
+        <Text style={[styles.sectionTitle, { color: Colors[colorScheme ?? 'light'].text }]}>
           Sosyal Medya
         </Text>
         <View style={styles.socialMediaContainer}>
